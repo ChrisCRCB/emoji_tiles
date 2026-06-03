@@ -8,6 +8,7 @@
     "Workplane",
     "xlen",
     "XY",
-    "ylen"
+    "ylen",
+    "zlen"
   ]
 }

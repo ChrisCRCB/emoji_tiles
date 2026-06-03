@@ -39,25 +39,42 @@ def emoji_tile(
     text_thickness: float = 1,
     backing_padding: float = 2,
     backing_fillet: float = 1,
-) -> cq.Compound:
+) -> cq.Shape:
     """Generate an emoji tile."""
     content = _tile(
         emoji=emoji,
         font_size=font_size,
         thickness=text_thickness,
     ).translate((backing_padding, backing_padding, backing_thickness))
+    if content.size() == 0:
+        raise ValueError(
+            "No text geometry was generated. The selected glyph may not be supported by the active font."
+        )
+
     emoji_shape = cast(cq.Shape, content.val())
+    if (
+        emoji_shape.BoundingBox().xlen <= 0
+        or emoji_shape.BoundingBox().ylen <= 0
+        or emoji_shape.BoundingBox().zlen <= 0
+    ):
+        raise ValueError(
+            "Text geometry is degenerate (zero-size bounding box). Try a different character or font."
+        )
+
     backing = _backing(
         emoji_shape=emoji_shape,
         fillet=backing_fillet,
         padding=backing_padding,
         thickness=backing_thickness,
     )
-    return cq.Compound.makeCompound([emoji_shape, cast(cq.Shape, backing.val())])
+    tile = backing.union(content)
+    return cast(cq.Shape, tile.val())
 
 
 if __name__ == "__main__":
+    cat = emoji_tile("😸")
+    q = emoji_tile("q").translate((100, 0, 0))
     cq.exporters.export(
-        emoji_tile("😸"),
-        "emoji_tile.step",
+        cq.Compound.makeCompound([cat, q]),
+        "tiles.step",
     )
