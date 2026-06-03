@@ -11,6 +11,7 @@ def _tile(emoji: str, font_size: float = 50, thickness: float = 1) -> cq.Workpla
         distance=thickness,
         halign="left",
         valign="bottom",
+        font="Segoe UI Emoji",
     )
 
 
@@ -73,8 +74,4 @@ def emoji_tile(
 
 if __name__ == "__main__":
     cat = emoji_tile("😸")
-    q = emoji_tile("q").translate((100, 0, 0))
-    cq.exporters.export(
-        cq.Compound.makeCompound([cat, q]),
-        "tiles.step",
-    )
+    cat.export("cat.step")
