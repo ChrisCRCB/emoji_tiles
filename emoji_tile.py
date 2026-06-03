@@ -21,9 +21,9 @@ def _backing(
     fillet: float = 1,
 ) -> cq.Workplane:
     """Return backing for a tile."""
-    box = emoji_shape.BoundingBox()
-    length = box.xlen + padding * 2
-    width = box.ylen + padding * 2
+    bounding_box = emoji_shape.BoundingBox()
+    length = bounding_box.xlen + padding * 2
+    width = bounding_box.ylen + padding * 2
     box = cq.Workplane("XY").box(
         length=length, width=width, height=thickness, centered=False
     )
@@ -37,8 +37,8 @@ def emoji_tile(
     font_size: float = 50,
     backing_thickness: float = 2,
     text_thickness: float = 1,
-    backing_padding: float = 3,
-    backing_fillet: float = 2,
+    backing_padding: float = 2,
+    backing_fillet: float = 1,
 ) -> cq.Compound:
     """Generate an emoji tile."""
     content = _tile(
